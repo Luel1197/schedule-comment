@@ -7,9 +7,11 @@ import com.sparta.schedule.service.ScheduleService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +45,18 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleResponse>> findAll() {
         List<ScheduleResponse> responses = scheduleService.findAll();
         return ResponseEntity.ok(responses);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteSchedule(@PathVariable Long id) {
+        scheduleService.deleteById(id);
+        return ResponseEntity.ok(id+"Schedule deleted");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateSchedule(@PathVariable Long id, @RequestBody Schedule request) {
+        scheduleService.update(id, request);
+        return ResponseEntity.ok(id+"Schedule updated");
     }
 
 

@@ -7,6 +7,7 @@ import com.sparta.schedule.repository.ScheduleRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -55,17 +56,32 @@ public class ScheduleService {
     }
 
 
+    //업데이트
+    public void update(Long id, Schedule request) {
+        Schedule schedule = scheduleRepository.findById(id).get();
 
+        if(schedule.getPassword() != null && !Objects.equals(schedule.getPassword(), request.getPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
+        schedule.setTitle(request.getTitle());
+        schedule.setDescription(request.getDescription());
+        schedule.setManager(request.getManager());
+
+        scheduleRepository.save(schedule);
+    }
     
 
 
 
 
-//    //딜리트
-//
-//    public Long update(Schedule request) {
-//       scheduleRepository.delete();
-//    }
+
+    //딜리트
+
+    public void deleteById(Long id) {
+       scheduleRepository.deleteById(id);
+
+    }
 
 
 
