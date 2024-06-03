@@ -24,6 +24,8 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
+
+    //일정 생성
     //404보내기위한 엔티티 (리스폰스 엔티티) 할일 생성
     @PostMapping
     public ResponseEntity<String> createSchedule(@RequestBody Schedule request) {
@@ -32,7 +34,7 @@ public class ScheduleController {
 
         return ResponseEntity.ok(id + "Schedule created");
     }
-
+    //일정 단일 조회
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponse> findById(@PathVariable Long id) {
 
@@ -40,19 +42,20 @@ public class ScheduleController {
         return ResponseEntity.ok(response);
 
     }
-
+    //일정 전체 조회
     @GetMapping
     public ResponseEntity<List<ScheduleResponse>> findAll() {
         List<ScheduleResponse> responses = scheduleService.findAll();
         return ResponseEntity.ok(responses);
     }
 
+    //일정 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteSchedule(@PathVariable Long id) {
         scheduleService.deleteById(id);
         return ResponseEntity.ok(id+"Schedule deleted");
     }
-
+    //일정 업데이트
     @PutMapping("/{id}")
     public ResponseEntity<String> updateSchedule(@PathVariable Long id, @RequestBody Schedule request) {
         scheduleService.update(id, request);

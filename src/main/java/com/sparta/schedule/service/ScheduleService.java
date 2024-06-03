@@ -60,6 +60,8 @@ public class ScheduleService {
     public void update(Long id, Schedule request) {
         Schedule schedule = scheduleRepository.findById(id).get();
 
+
+        //비번 체크
         if(schedule.getPassword() != null && !Objects.equals(schedule.getPassword(), request.getPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
