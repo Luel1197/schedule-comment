@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
+
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
 public class Schedule {
     @Id
@@ -51,5 +51,23 @@ public class Schedule {
     }
 
 
+    //책임을 서비스말고 DB로 넘긴다.
+    public boolean validatePassword(String password) {
+
+        return this.password.equals(password);
+    }
+
+
+    public void validatePassword2(String password) {
+        if (!this.password.equals(password)) {
+            throw new IllegalArgumentException("잘못된 입력");
+        }
+    }
+
+    public void update(String title, String description, String manager) {
+        this.title = title;
+        this.description = description;
+        this.manager = manager;
+    }
 
 }

@@ -1,7 +1,9 @@
 package com.sparta.schedule.controller;
 
 
+import com.sparta.schedule.dto.ScheduleDeleteRequest;
 import com.sparta.schedule.dto.ScheduleResponse;
+import com.sparta.schedule.dto.ScheduleUpdateRequest;
 import com.sparta.schedule.model.Schedule;
 import com.sparta.schedule.service.ScheduleService;
 import java.util.List;
@@ -51,13 +53,17 @@ public class ScheduleController {
 
     //일정 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSchedule(@PathVariable Long id) {
-        scheduleService.deleteById(id);
+    public ResponseEntity<String> deleteSchedule(@PathVariable (name = "id") Long  id,  @RequestBody ScheduleDeleteRequest request ) {
+        scheduleService.deleteById(id, request);
         return ResponseEntity.ok(id+"Schedule deleted");
     }
+
+
+
     //일정 업데이트
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateSchedule(@PathVariable Long id, @RequestBody Schedule request) {
+    public ResponseEntity<String> updateSchedule(@PathVariable Long id, @RequestBody
+        ScheduleUpdateRequest request) {
         scheduleService.update(id, request);
         return ResponseEntity.ok(id+"Schedule updated");
     }

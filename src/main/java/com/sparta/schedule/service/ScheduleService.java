@@ -1,7 +1,9 @@
 package com.sparta.schedule.service;
 
 
+import com.sparta.schedule.dto.ScheduleDeleteRequest;
 import com.sparta.schedule.dto.ScheduleResponse;
+import com.sparta.schedule.dto.ScheduleUpdateRequest;
 import com.sparta.schedule.model.Schedule;
 import com.sparta.schedule.repository.ScheduleRepository;
 import jakarta.transaction.Transactional;
@@ -31,7 +33,7 @@ public class ScheduleService {
 
     //할일 조회
     public ScheduleResponse findById(Long id) {
-        Schedule schedule = scheduleRepository.findById(id).orElseThrow(()->new RuntimeException("Schedule not found"));
+        Schedule schedule = findScheduleById(id);
 
         return new ScheduleResponse(schedule.getTitle(),
         schedule.getDescription(),
@@ -55,37 +57,46 @@ public class ScheduleService {
 
     }
 
-
     //업데이트
-    public void update(Long id, Schedule request) {
-        Schedule schedule = scheduleRepository.findById(id).get();
+    @Transactional
+    public void update(Long id, ScheduleUpdateRequest request) {
+        Schedule schedule = findScheduleById(id);
 
 
-        //비번 체크
-        if(schedule.getPassword() != null && !Objects.equals(schedule.getPassword(), request.getPassword())) {
+        //1번
+        if(!schedule.validatePassword(request.getPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
 
-        schedule.setTitle(request.getTitle());
-        schedule.setDescription(request.getDescription());
-        schedule.setManager(request.getManager());
-
-        scheduleRepository.save(schedule);
+        schedule.update(request.getTitle(), request.getDescription(), request.getManager());
+            //@Transactional 이걸 걸어두면 jpa가 자동으로 저장? 해줌 저걸 걸어두면 이 메서드를 한 @Transactional이라고 한다.
+//        scheduleRepository.save(schedule);
     }
     
 
 
-
-
-
     //딜리트
+    @Transactional
+    public void deleteById(Long id, ScheduleDeleteRequest request) {
+        Schedule schedule = findScheduleById(id);
 
-    public void deleteById(Long id) {
-       scheduleRepository.deleteById(id);
+
+        //1번
+        if(!schedule.validatePassword(request.getPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
+//        //2번
+//        schedule.validatePassword2(request.getPassword());
+
+        scheduleRepository.deleteById(id);
 
     }
 
 
+    private Schedule findScheduleById(Long id) {
+        return scheduleRepository.findById(id).orElseThrow(()->new RuntimeException("Schedule not found"));
+    }
 
 
 
